@@ -38,6 +38,10 @@
             return {
                 collapse: false,
                 items: [
+                    {   icon: 'el-icon-lx-calendar',
+                        index: 'itemForm',
+                        title: 'Add item information'
+                    },
                     {
                         icon: 'el-icon-lx-home',
                         index: 'dashboard',
@@ -61,10 +65,6 @@
                             {
                                 index: 'form',
                                 title: '基本表单'
-                            },
-                            {
-                                index: 'itemForm',
-                                title: 'Add item information'
                             },
                             {
                                 index: '3-2',
