@@ -8,307 +8,110 @@
         </div>
         <div class="container">
             <div class="form-box">
-                <el-form ref="form" :model="form" label-width="80px">
+                <el-form ref="tour" :model="tour" label-width="80px">
                     <h4>Basic Information</h4>
-                    <el-form-item label="Operator">
-                        <input type="text" disabled="" :value="form.userId" v-show="false">{{username}}
+                    <el-form-item label="Tour name" prop="name">
+                        <el-input v-model="tour.name"></el-input>
                     </el-form-item>
-                    <el-form-item label="type">
-                        <el-select v-model="form.type" placeholder="Type">
-                            <el-option key="1" label="Tour" value="1"></el-option>
-                            <el-option key="2" label="Hotel" value="2"></el-option>
-                            <el-option key="3" label="Restaurant" value="3"></el-option>
-                        </el-select>
+                    <el-form-item label="description" prop="description">
+                        <el-input v-model="tour.description"></el-input>
                     </el-form-item>
-                    <el-form-item label="Kind">
-                        <el-select v-model="form.kind" placeholder="Kind">
-                            <el-option key="1" label="Kind1" value="1"></el-option>
-                            <el-option key="2" label="Kind2" value="2"></el-option>
-                            <el-option key="3" label="Kind3" value="3"></el-option>
-                        </el-select>
+                    <el-form-item label="details" prop="details">
+                        <el-input v-model="tour.details"></el-input>
                     </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="onSubmit">Create</el-button>
-                        <el-button>Cancel</el-button>
+                    <el-form-item label="duration" prop="duration">
+                        <el-input v-model="tour.duration"></el-input>
                     </el-form-item>
-                </el-form>
-            </div>
-        </div>
-        <div class="container">
-            <div class="form-box">
-                <el-form ref="form" :model="smallInfo" label-width="80px">
-                    <h4>Small Information</h4>
-                    <el-form-item label="Item Type">
-                        <el-select v-model="smallInfo.type" placeholder="Type">
-                            <el-option key="1" label="popular" value="popular"></el-option>
-                            <el-option key="2" label="topRate" value="topRate"></el-option>
-                            <el-option key="3" label="standard" value="standard"></el-option>
-                        </el-select>
+                    <el-form-item label="max duration" prop="maxDuration">
+                        <el-input v-model="tour.maxDuration"></el-input>
                     </el-form-item>
-                    <el-form-item label="Image Url">
-                        <el-input v-model="smallInfo.imgUrl"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Title">
-                        <el-input v-model="smallInfo.title"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Description">
-                        <el-input v-model="smallInfo.des"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Past Price" size="small">
-                        <el-input v-model="smallInfo.pPrice"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Current Price" size="mini">
-                        <el-input v-model="smallInfo.cPrice"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="onSubmit2">Save This Part
-                        </el-button>
-                        <el-button>Cancel</el-button>
-                    </el-form-item>
-                </el-form>
-            </div>
-            <div></div>
-        </div>
-
-        <div class="container">
-            <div class="form-box">
-                <el-form ref="form" :model="brefSchedule" label-width="80px">
-                    <h4>Brief schedule & address</h4>
-                    <el-form-item label="Address">
-                        <el-input v-model="brefSchedule.address"></el-input>
-                    </el-form-item>
-                    <h4>Schedule</h4>
-                    <el-form-item label="Moday">
-                        <el-select v-model="brefSchedule.mo" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Tuesday">
-                        <el-select v-model="brefSchedule.tu" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Wednesday">
-                        <el-select v-model="brefSchedule.we" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Thursday">
-                        <el-select v-model="brefSchedule.th" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Friday">
-                        <el-select v-model="brefSchedule.fr" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Saturday">
-                        <el-select v-model="brefSchedule.sa" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Sunday">
-                        <el-select v-model="brefSchedule.su" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
+                    <el-form-item label="country" prop="country">
+                        <el-select v-model="tour.country" placeholder="country" @change="selectArea">
+                            <el-option key="1" label="India" value="India"></el-option>
+                            <el-option key="2" label="USA" value="USA"></el-option>
+                            <el-option key="3" label="France" value="France"></el-option>
+                            <el-option key="4" label="Germany" value="Germany"></el-option>
+                            <el-option key="5" label="Spain" value="Spain"></el-option>
+                            <el-option key="6" label="Qatar" value="Qatar"></el-option>
                         </el-select>
                     </el-form-item>
 
-                    <el-form-item>
-                        <el-button type="primary" @click="onSubmit2">Save This Part
-                        </el-button>
-                        <el-button>Cancel</el-button>
+                    <el-form-item label="Area" prop="countryArea">
+                        <el-select v-model="tour.countryArea" placeholder="area">
+                            <el-option v-for="item in currentOption" :key="item.key" :label="item.label" :value="item.content"></el-option>
+                        </el-select>
                     </el-form-item>
-                </el-form>
-            </div>
-            <div></div>
-        </div>
-        <div class="container">
-            <div class="form-box">
-                <el-form ref="form" :model="des" label-width="80px">
-                    <h4>Item description</h4>
-                    <el-form-item label="Title">
-                        <el-input v-model="des.title"></el-input>
+                    <el-form-item label="details link" prop="detailsLink">
+                        <el-input v-model="tour.detailsLink"></el-input>
                     </el-form-item>
-                    <el-form-item label="Title description">
-                        <el-input v-model="des.titleDes"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Include description">
-                        <el-input v-model="des.includeDes"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="onSubmit3">Save This Part
-                        </el-button>
-                        <el-button>Cancel</el-button>
-                    </el-form-item>
-                </el-form>
-            </div>
-            <div></div>
-        </div>
 
-        <div class="container">
-            <el-row>
-                <el-col :span="18">
-                    <div class="form-box">
-                        <el-form ref="form" :model="des" label-width="80px">
-                            <h4>Item description</h4>
-                            <el-form-item label="Title">
-                                <el-input v-model="des.title"></el-input>
-                            </el-form-item>
-                            <el-form-item label="Title description">
-                                <el-input v-model="des.titleDes"></el-input>
-                            </el-form-item>
-                            <el-form-item label="Include description">
-                                <el-input v-model="des.includeDes"></el-input>
-                            </el-form-item>
-                            <el-form-item label="Items">
-                                <el-input v-model="tempItem"></el-input>
-                                <el-button type="primary" @click="addItem">Add</el-button>
-                                <el-button type="primary" @click="deleteItem">delete last one</el-button>
-                            </el-form-item>
-                            <el-form-item>
-                                <el-button type="primary" @click="onSubmit3">Save This Part
-                                </el-button>
-                                <el-button>Cancel</el-button>
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                </el-col>
-                <el-col :span="4">
-                    <h2>Include items</h2>
-                    <p v-for="item in includeItem">{{item}}</p>
-                </el-col>
-            </el-row>
-        </div>
-        <div class="container">
-            <div class="form-box">
-                <el-form ref="schedule" :model="scheduleDetailItem" label-width="80px">
-                    <h4>Schedule{{schedule.length}}</h4>
-                    <el-form-item label="Duration">
-                        <el-input v-model="scheduleDetailItem.duration"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Moday">
-                        <el-select v-model="scheduleDetailItem.mo" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
+                    <el-form-item label="tour status" prop="status">
+                        <el-select v-model="tour.status" placeholder="1: active,2: inactive,3: deleted" >
+                            <el-option key="1" label="active" value="1"></el-option>
+                            <el-option key="2" label="inactive" value="2"></el-option>
+                            <el-option key="3" label="deleted" value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Tuesday">
-                        <el-select v-model="scheduleDetailItem.tu" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
+
+                    <el-form-item label="past price" prop="pPrice">
+                        <el-input v-model="tour.pPrice"></el-input>
+                    </el-form-item>
+                    <el-form-item label="current price" prop="cPrice">
+                        <el-input v-model="tour.cPrice"></el-input>
+                    </el-form-item>
+
+                    <el-form-item label="type" prop="type" >
+                        <el-select v-model="tour.type" placeholder="popular top-rate normal">
+                            <el-option key="1" label="popular" value="3"></el-option>
+                            <el-option key="2" label="top rate" value="2"></el-option>
+                            <el-option key="3" label="normal" value="1"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Wednesday">
-                        <el-select v-model="scheduleDetailItem.we" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
+                    <h4>Services</h4>
+                    <el-form-item label="Accessibility" prop="hasAccessibility" >
+                        <el-select v-model="tour.hasAccessibility" placeholder="no">
+                            <el-option key="1" label="has" value="1"></el-option>
+                            <el-option key="2" label="no" value="2"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Thursday">
-                        <el-select v-model="scheduleDetailItem.th" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
+                    <el-form-item label="allot pet" prop="isAllowedPet" >
+                        <el-select v-model="tour.isAllowedPet" placeholder="no">
+                            <el-option key="1" label="yes" value="1"></el-option>
+                            <el-option key="2" label="no" value="2"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Friday">
-                        <el-select v-model="scheduleDetailItem.fr" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
+                    <el-form-item label="has audio guide" prop="hasAudioGuide">
+                        <el-select v-model="tour.hasAudioGuide" placeholder="no">
+                            <el-option key="1" label="has" value="1"></el-option>
+                            <el-option key="2" label="no" value="2"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Saturday">
-                        <el-select v-model="scheduleDetailItem.sa" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
+                    <el-form-item label="has tour guide" prop="hasTourGuide">
+                        <el-select v-model="tour.hasTourGuide" placeholder="no">
+                            <el-option key="1" label="has" value="1"></el-option>
+                            <el-option key="2" label="no" value="2"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Sunday">
-                        <el-select v-model="scheduleDetailItem.su" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
+
+                    <el-form-item label="item description" prop="includeDescription">
+                        <el-input v-model="tour.includeDescription"></el-input>
+                    </el-form-item>
+
+                    <el-form-item v-for="(item, index) in tour.includeItems" :label="'item ' + index" :key="item.key" prop="includeItems">
+                        <el-input v-model="item.content"></el-input>
+                        <el-button @click.prevent="removeItem(item)">delete</el-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="onSubmit4">Save This Part
-                        </el-button>
-                        <el-button type="primary" @click="saveSchedule">Save this schedule for this item
-                        </el-button>
-                        <el-button type="primary" @click="deleteSchedule">delete last one
-                        </el-button>
-                        <el-button type="primary" @click="addSchedule">add new one
-                        </el-button>
-
-                        <el-button>Cancel</el-button>
+                        <el-button @click="addDomain">add</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="createTour" >Create</el-button>
+                        <el-button @click="resetForm('tour')" >Clean</el-button>
                     </el-form-item>
                 </el-form>
             </div>
         </div>
 
-        <div class="container">
-            <div class="form-box">
-                <el-form ref="form" :model="openingTime" label-width="80px">
-                    <h4>Opening Time</h4>
-                    <el-form-item label="Title">
-                        <el-input v-model="openingTime.title"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Moday">
-                        <el-select v-model="openingTime.mo" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Tuesday">
-                        <el-select v-model="openingTime.tu" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Wednesday">
-                        <el-select v-model="openingTime.we" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Thursday">
-                        <el-select v-model="openingTime.th" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Friday">
-                        <el-select v-model="openingTime.fr" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Saturday">
-                        <el-select v-model="openingTime.sa" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Sunday">
-                        <el-select v-model="openingTime.su" placeholder="duration">
-                            <el-option v-for="item in scheduleItem" :key="item.id" :label="item.content"
-                                       :value="item.content"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="onSubmit">Save This Part
-                        </el-button>
-                        <el-button>Cancel</el-button>
-                    </el-form-item>
-                </el-form>
-            </div>
-        </div>
 
     </div>
 </template>
@@ -316,132 +119,91 @@
 <script>
     export default {
         name: 'itemForm',
-        data: function () {
+        data() {
             return {
-                scheduleItem: [
-                    {content: 'closed', id: '1'},
-                    {content: '9:00AM - 10:00PM', id: '2'},
-                    {content: '9:00AM - 5:00PM', id: '3'}
+                tour:{
+                    name:'',
+                    description:'',
+                    details:'',
+                    duration:'',
+                    maxDuration:'',
+                    country:'',
+                    countryArea:'',
+                    detailsLink:'',
+                    status:'',
+                    cPrice:'',
+                    pPrice:'',
+                    type:'',
+                    hasAccessibility:'',
+                    isAllowedPet:'',
+                    hasAudioGuide:'',
+                    hasTourGuide:'',
+                    includeDescription:'',
+                    includeItems:[
+                        {content:'',key:'kjhkjhkj'}
+                    ]
+                },
+                areasOption:[
+                    [
+                        {key: "1",label: 'rohtok',content:'rohtok'},
+                        {key: "2",label: 'rudrapur area',content:'rudrapur area'},
+                    ],
+                    [
+                        {key: "1",label: 'Detroit City',content:'Detroit City'},
+                        {key: "2",label: 'Lansing',content:'Lansing'},
+                        {key: "3",label: 'New York',content:'New York'},
+                        {key: "4",label: 'Ann Arbor',content:'Ann Arbor'},
+                        {key: "5",label: 'Toledo',content:'Toledo'},
+                    ],
+
                 ],
-                username: 'Bohan',
-                currentStep: 1,
-                form: {
-                    userId: '1',
-                    type: '',
-                    kind: ''
-                },
-                smallInfo: {
-                    userId: '1',
-                    itemId: '1111',
-                    type: '',
-                    imgUrl: '',
-                    title: '',
-                    des: '',
-                    cPrice: '',
-                    pPrice: ''
-                },
-                brefSchedule: {
-                    userId: '1',
-                    itemId: '1111',
-                    address: '',
-                    mo: '',
-                    tu: '',
-                    we: '',
-                    th: '',
-                    fr: '',
-                    sa: '',
-                    su: ''
-                },
-                des: {
-                    userId: '1',
-                    itemId: '1111',
-                    title: '',
-                    titleDes: '',
-                    includeDes: '',
-                },
-                includeItem: [],
-                tempItem: '',
-                schedule: [],
-                scheduleDetailItem: {
-                    userId: '1',
-                    itemId: '1111',
-                    duration: '',
-                    mo: '',
-                    tu: '',
-                    we: '',
-                    th: '',
-                    fr: '',
-                    sa: '',
-                    su: ''
-                },
-                openingTime: {
-                    userId: '1',
-                    itemId: '1111',
-                    title: '',
-                    mo: '',
-                    tu: '',
-                    we: '',
-                    th: '',
-                    fr: '',
-                    sa: '',
-                    su: ''
-                }
+
+                currentOption:[
+
+                ]
             }
         },
         methods: {
-            onSubmit() {
-                console.log(JSON.stringify(this.form));
-                this.$message.success('Create success！');
-                this.currentStep++;
-            },
-            onSubmit2() {
-                console.log(JSON.stringify(this.form));
-                this.$message.success('Save success！');
-                this.currentStep++;
-            },
-            onSubmit3() {
-                console.log(JSON.stringify(this.form));
-                this.$message.success('Save success！');
-                this.currentStep++;
-            },
-            onSubmit4() {
-                console.log(JSON.stringify(this.scheduleDetailItem));
+            selectArea(){
+                if (this.tour.country === 'India'){
+                    this.currentOption = this.areasOption[0];
+                } else if (this.tour.country === 'USA'){
+                    this.currentOption = this.areasOption[1];
+                }
 
-                this.$message.success('Save success！');
-                this.currentStep++;
+                //clean
+                this.tour.countryArea = '';
             },
-            addItem() {
-                this.includeItem.push(this.tempItem);
-                this.tempItem = '';
-                this.$message.success('add success！');
+            createTour(){
+                let data = JSON.stringify(this.tour);
+                console.log(data);
+                this.$axios({
+                    method:'post',
+                    url: "/api/tour",
+                    data:data
+                }).then(res => {
+                    console.log(res)
+                    this.$message.success(res.msg);
+                }).catch(error => {
+                    this.$message.info(error);
+                })
             },
-            deleteItem() {
-                if (this.includeItem.length === 0) {
-                    this.$message.warning("No one inside!");
-                    return;
+            removeItem(item) {
+                let index = this.tour.includeItems.indexOf(item)
+                if (index !== -1) {
+                    this.tour.includeItems.splice(index, 1)
                 }
-                this.includeItem.pop();
-                this.$message.success('delete success！');
             },
-            addSchedule() {
-                this.$refs['schedule'].resetField();
-                this.$message.success('clear success！');
+            addDomain() {
+                this.tour.includeItems.push({
+                    value: '',
+                    key: Date.now()
+                });
             },
-            saveSchedule() {
-                this.schedule.push(this.scheduleDetailItem);
-                this.$message.success('save success！');
-            },
-            deleteSchedule() {
-                if (this.schedule.length === 0) {
-                    this.$message.warning("No one inside!");
-                    return;
-                }
-                this.schedule.pop();
-                this.$message.success('delete success！');
+            resetForm(formName){
+                this.$refs[formName].resetFields();
+                this.$message.success('success!');
             }
-        },
-        created() {
-
         }
     }
 </script>

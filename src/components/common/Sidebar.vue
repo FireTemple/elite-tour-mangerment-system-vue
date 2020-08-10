@@ -42,6 +42,10 @@
                         index: 'itemForm',
                         title: 'Add item information'
                     },
+                    {   icon: 'el-icon-lx-cascades',
+                        index: 'tourList',
+                        title: 'View current tour list'
+                    },
                     {
                         icon: 'el-icon-lx-home',
                         index: 'dashboard',

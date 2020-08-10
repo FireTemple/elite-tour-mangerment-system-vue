@@ -1,19 +1,24 @@
 module.exports = {
-    baseUrl: './',
-    productionSourceMap: false,
+    // baseUrl: './',
+    // productionSourceMap: false,
     devServer: {
         proxy: {
-            '/api':{
-                target:'http://jsonplaceholder.typicode.com',
-                changeOrigin:true,
-                pathRewrite:{
-                    '/api':''
-                }
+            '/test': {
+                target: 'http://localhost:8081',
+                pathReWrite:{
+                    '^/test': ''
+                },
+                changeOrigin: true,
+                secure:false
             },
-            '/ms':{
-                target: 'https://www.easy-mock.com/mock/592501a391470c0ac1fab128',
-                changeOrigin: true
-            }
+            '/api': {
+                target: 'http://localhost:8081',
+                pathReWrite:{
+                    '^/api': ''
+                },
+                changeOrigin: true,
+                secure:false
+            },
         }
     }
 }

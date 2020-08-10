@@ -101,6 +101,12 @@ export default new Router({
                     path: '/itemForm',
                     component: resolve => require(['../view/ItemForm'], resolve),
                     meta: { title: 'Item form' }
+                },
+
+                {
+                    path: '/tourList',
+                    component: resolve => require(['../view/tour/TourListTable'], resolve),
+                    meta: { title: 'Tour list' }
                 }
             ]
         },
