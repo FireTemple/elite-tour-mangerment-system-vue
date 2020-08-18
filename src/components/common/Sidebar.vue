@@ -38,13 +38,9 @@
             return {
                 collapse: false,
                 items: [
-                    {   icon: 'el-icon-lx-calendar',
-                        index: 'itemForm',
-                        title: 'Add item information'
-                    },
                     {   icon: 'el-icon-lx-cascades',
                         index: 'tourList',
-                        title: 'View current tour list'
+                        title: 'Tours Management'
                     },
                     {
                         icon: 'el-icon-lx-home',
