@@ -9,12 +9,8 @@
         <!-- table -->
         <div class="container">
             <div class="handle-box">
-                <el-select v-model="selectCountry" placeholder="country" class="handle-select mr10">
-                    <el-option key="1" label="USA" value="USA"></el-option>
-                    <el-option key="2" label="India" value="India"></el-option>
-                </el-select>
-                <el-input v-model="selectName" placeholder="name key words" class="handle-input mr10"></el-input>
-                <el-input v-model="selectDuration" placeholder="duration longer then"
+                <el-input v-model="selectPrice" placeholder="price under ..." class="handle-input mr10"></el-input>
+                <el-input v-model="selectName" placeholder="name contains ...."
                           class="handle-input mr10"></el-input>
                 <el-button type="" icon="el-icon-zoom-in" @click="search">search</el-button>
                 <el-button type="danger" icon="el-icon-close" @click="clearFilter">clear filter</el-button>
@@ -60,7 +56,7 @@
                 <el-table-column label="Operation" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="getHotel(scope.row.id)">edit</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="deleteTour(scope.row.id)"
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="deleteHotel(scope.row.id)"
                                    v-show="scope.row.status !== '3'">delete
                         </el-button>
                         <el-button type="text" icon="el-icon-upload" class="green" @click="uploadImg(scope.row.id)"
@@ -474,8 +470,7 @@
                  * filter data
                  */
                 selectName: '',
-                selectCountry: '',
-                selectDuration: '',
+                selectPrice: '',
 
             }
         },
@@ -573,10 +568,10 @@
                 if (index !== -1) {
                     this.editHotel.rooms.splice(index, 1)
                 }
-                if (!this.addVisible) {
+                if (!this.addVisible && this.editHotel.rooms[index].id) {
                     this.$axios({
                         method: 'delete',
-                        url: '/api/includeItem/' + this.editHotel.rooms[index].id
+                        url: '/api/room/' + this.editHotel.rooms[index].id
                     }).then(res => {
                         console.log(res);
                     }).catch(error => {
@@ -610,7 +605,7 @@
                 }).then(() => {
                     this.$axios({
                         method: 'delete',
-                        url: '/api/tour/' + id
+                        url: '/api/hotel/' + id
                     }).then(res => {
                         this.$message.success(res.msg);
                         this.getData();
@@ -633,10 +628,10 @@
                 this.$forceUpdate();
             },
             // logical delete
-            deleteTour(id) {
+            deleteHotel(id) {
                 this.$axios({
                     method: 'put',
-                    url: 'api/tour/' + id
+                    url: '/api/hotel/' + id
                 }).then(res => {
                     this.$message.success(res.msg);
                     this.getData();
@@ -680,30 +675,24 @@
              * filter methods
              */
             search() {
-                this.tours = this.tempTours;
-
-                if (this.selectCountry !== '') {
-                    this.tours = this.tours.filter(item => {
-                        return item.country === this.selectCountry;
-                    })
-                }
+                this.hotels = this.tempHotels;
+                console.log('select name: ' + this.selectName);
                 if (this.selectName !== '') {
-                    this.tours = this.tours.filter(item => {
-                        console.log(item.name.indexOf('2'));
+                    this.hotels = this.hotels.filter(item => {
+                        console.log(item.name.indexOf(this.selectName));
                         return item.name.indexOf(this.selectName) !== -1;
                     })
                 }
-                if (this.selectDuration !== '') {
-                    this.tours = this.tours.filter(item => {
-                        return parseInt(item.duration) >= parseInt(this.selectDuration);
+                if (this.selectPrice !== '') {
+                    this.hotels = this.hotels.filter(item => {
+                        return parseInt(item.cPrice) <= parseInt(this.selectPrice);
                     })
                 }
             },
             clearFilter() {
-                this.tours = this.tempTours;
-                this.selectCountry = '';
+                this.hotels = this.tempHotels;
+                this.selectPrice = '';
                 this.selectName = '';
-                this.selectDuration = '';
             },
             refresh() {
                 this.getData();
