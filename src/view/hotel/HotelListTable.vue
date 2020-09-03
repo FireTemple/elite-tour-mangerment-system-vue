@@ -288,7 +288,7 @@
                         <el-option key="2" label="no" value="2"></el-option>
                     </el-select>
                     <p>safety Box description</p>
-                    <el-input v-model="item.safetyBoxDes" v-show="item.hasSafetyBox === '1'"></el-input>
+                    <el-input v-model="item.safteyBoxDes" v-show="item.hasSafetyBox === '1'"></el-input>
                     <el-button @click.prevent="removeRoom(index)">delete</el-button>
 
                 </el-form-item>
