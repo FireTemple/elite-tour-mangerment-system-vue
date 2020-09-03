@@ -474,6 +474,8 @@
              * operation methods
              */
             removeItem(item) {
+                console.log(item);
+                if (item.id === null || item.id === '') return;
                 let index = this.editTour.includeItems.indexOf(item)
                 if (index !== -1) {
                     this.editTour.includeItems.splice(index, 1)

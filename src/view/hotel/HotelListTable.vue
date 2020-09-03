@@ -79,10 +79,10 @@
         </div>
 
         <!-- edit-->
-        <el-dialog title="add new tour" :visible.sync="editVisible" width="50%">
-            <el-form ref="addTour" :model="editHotel" label-width="80px">
+        <el-dialog title="edit hotel" :visible.sync="editVisible" width="70%">
+            <el-form ref="editHotel" :model="editHotel" label-width="150px">
                 <h4>Basic Information</h4>
-                <el-form-item label="Tour name" prop="name">
+                <el-form-item label="hotel name" prop="name">
                     <el-input v-model="editHotel.name"></el-input>
                 </el-form-item>
                 <el-form-item label="description" prop="description">
@@ -97,12 +97,14 @@
                 <el-form-item label="current price" prop="cPrice">
                     <el-input v-model="editHotel.cPrice"></el-input>
                 </el-form-item>
-
+                <el-form-item label="past price" prop="cPrice">
+                    <el-input v-model="editHotel.pPrice"></el-input>
+                </el-form-item>
                 <el-form-item label="details link" prop="detailsLink">
                     <el-input v-model="editHotel.detailsLink"></el-input>
                 </el-form-item>
 
-                <el-form-item label="tour status" prop="status">
+                <el-form-item label="hotel status" prop="status">
                     <el-select v-model="editHotel.status" placeholder="1: active,2: inactive,3: deleted">
                         <el-option key="1" label="active" value="1"></el-option>
                         <el-option key="2" label="inactive" value="2"></el-option>
@@ -118,15 +120,15 @@
                     </el-select>
                 </el-form-item>
                 <h4>Services</h4>
-                <el-form-item label="has wifi" prop="hasWifi">
-                    <el-select v-model="editHotel.hasWifi" placeholder="no">
-                        <el-option key="1" label="has" value="1"></el-option>
-                        <el-option key="2" label="no" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="has accessibility" prop="hasAccessibility">
                     <el-select v-model="editHotel.hasAccessibility" placeholder="no">
                         <el-option key="1" label="yes" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="has wifi" prop="hasWifi">
+                    <el-select v-model="editHotel.hasWifi" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
                         <el-option key="2" label="no" value="2"></el-option>
                     </el-select>
                 </el-form-item>
@@ -149,18 +151,84 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="has restaurant" prop="includeDescription">
-                    <el-input v-model="editHotel.hasRestaurant"></el-input>
+                <el-form-item label="has restaurant" prop="hasRestaurant">
+                    <el-select v-model="editHotel.hasRestaurant" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="allow pet" prop="allowPet">
+                    <el-select v-model="editHotel.allowPet" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="has restaurant" prop="hasParking">
+                    <el-select v-model="editHotel.hasParking" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="has breakfast" prop="hasBreakfast">
+                    <el-select v-model="editHotel.hasBreakfast" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <h4>Room Type</h4>
+                <br>
+                <el-form-item v-for="(item, index) in editHotel.rooms" :label="'Room: ' + (index + 1)"
+                              :key="item.key" prop="rooms">
+                    <p>type</p>
+                    <el-input v-model="item.type" @input="change"></el-input>
+                    <p>description</p>
+                    <el-input v-model="item.des" @input="change"></el-input>
+                    <p>has wifi</p>
+                    <el-select v-model="item.hasWifi" placeholder="no" @input="change">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                    <p>wifi description</p>
+                    <el-input v-model="item.wifiDes" v-show="item.hasWifi === '1'" @input="change"></el-input>
+                    <p>has TV</p>
+                    <el-select v-model="item.hasTV" placeholder="no" @input="change">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                    <p>TV description </p>
+                    <el-input v-model="item.tvDes" v-show="item.hasTV === '1'" @input="change"></el-input>
+                    <p>has safety Box</p>
+                    <el-select v-model="item.hasSafetyBox" placeholder="no" @input="change">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                    <p>safety Box description</p>
+                    <el-input v-model="item.safteyBoxDes" v-show="item.hasSafetyBox === '1'" @input="change"></el-input>
+                    <el-button @click.prevent="removeRoom(index)">delete</el-button>
+
                 </el-form-item>
 
                 <el-form-item>
                     <el-button @click="addDomain">add</el-button>
                 </el-form-item>
 
+                <h4>Facilities</h4>
+                <el-form-item label="description" prop="description">
+                    <el-input v-model="editHotel.facilitiesDes"></el-input>
+                </el-form-item>
+                <el-form-item v-for="(item, index) in editHotel.facilities" :label="'facilities: ' + (index + 1)"
+                              :key="item.key" prop="des">
+                    <el-input v-model="item.des" @input="change"></el-input>
+                    <el-button @click.prevent="removeFacility(index)">delete</el-button>
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button @click="addFacility">add</el-button>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                    <el-button @click="cancelAdd">Cancel</el-button>
-                    <el-button type="primary" @click="createHotel">Create</el-button>
+                    <el-button @click="cancelEdit">Cancel</el-button>
+                    <el-button type="primary" @click="updateHotel">update</el-button>
             </span>
         </el-dialog>
         <!-- create form -->
@@ -273,24 +341,23 @@
                         <el-option key="1" label="has" value="1"></el-option>
                         <el-option key="2" label="no" value="2"></el-option>
                     </el-select>
-                    <p>wifi description</p>
+                    <p v-show="item.hasWifi === '1'">wifi description</p>
                     <el-input v-model="item.wifiDes" v-show="item.hasWifi === '1'"></el-input>
                     <p>has TV</p>
                     <el-select v-model="item.hasTV" placeholder="no">
                         <el-option key="1" label="has" value="1"></el-option>
                         <el-option key="2" label="no" value="2"></el-option>
                     </el-select>
-                    <p>TV description </p>
+                    <p  v-show="item.hasTV === '1'">TV description </p>
                     <el-input v-model="item.tvDes" v-show="item.hasTV === '1'"></el-input>
                     <p>has safety Box</p>
                     <el-select v-model="item.hasSafetyBox" placeholder="no">
                         <el-option key="1" label="has" value="1"></el-option>
                         <el-option key="2" label="no" value="2"></el-option>
                     </el-select>
-                    <p>safety Box description</p>
+                    <p v-show="item.hasSafetyBox === '1'">safety Box description</p>
                     <el-input v-model="item.safteyBoxDes" v-show="item.hasSafetyBox === '1'"></el-input>
                     <el-button @click.prevent="removeRoom(index)">delete</el-button>
-
                 </el-form-item>
 
                 <el-form-item>
@@ -394,7 +461,7 @@
                         }
                     ],
                     facilities: [
-                        {des:'',key:'1'}
+                        {des: '', key: '1'}
                     ]
                 },
 
@@ -475,13 +542,13 @@
             getHotelsRooms(id) {
                 return this.$axios({
                     method: 'get',
-                    url: '/api/includeItem/' + id,
+                    url: '/api/rooms/' + id,
                 });
             },
             getHotelsFacilities(id) {
                 return this.$axios({
                     method: 'get',
-                    url: '/api/includeItem/' + id,
+                    url: '/api/facilities/' + id,
                 });
             },
 
@@ -492,8 +559,9 @@
                         self.editHotel = res1.data;
                         self.editHotel.rooms = res2.data;
                         self.editHotel.facilities = res3.data;
-                        self.$forceUpdate();
                         self.editVisible = true;
+                        self.$forceUpdate();
+                        self.$forceUpdate();
                     }))
             },
 
@@ -518,7 +586,7 @@
                 this.$forceUpdate();
 
             },
-            removeFacility(index){
+            removeFacility(index) {
                 if (index !== -1) {
                     this.editHotel.facilities.splice(index, 1)
                 }
@@ -533,20 +601,6 @@
                     })
                 }
                 this.$forceUpdate();
-            },
-            updateTour() {
-                this.$axios({
-                    method: 'put',
-                    url: '/api/tour',
-                    data: this.editTour
-                }).then(res => {
-                    console.log(res);
-                    this.$message.success(res.msg);
-                    this.getData();
-                    this.getTour(this.editTour.id);
-                }).catch(error => {
-                    this.$message.error("system error, pleases try later");
-                })
             },
             waveData(id) {
                 this.$confirm('This operation will permanently delete the record, cancel or continue?', 'notification', {
@@ -570,9 +624,9 @@
                     });
                 });
             },
-            addFacility(){
+            addFacility() {
                 this.editHotel.facilities.push({
-                        content:'',
+                        content: '',
                         key: new Date()
                     }
                 );
@@ -655,7 +709,7 @@
                 this.getData();
             },
             /**
-             *  add new tour
+             *  add new hotel
              */
             add() {
                 this.resetForm('addTour');
@@ -677,6 +731,22 @@
             },
             cancelAdd() {
                 this.addVisible = false;
+            },
+            /**
+             *  update new hotel
+             */
+            updateHotel() {
+                this.$axios({
+                    method: 'put',
+                    url: '/api/hotel',
+                    data: this.editHotel
+                }).then(res => {
+                    this.$message.success(res.msg);
+                    this.getData();
+                    this.getHotel(this.editHotel.id);
+                }).catch(error => {
+                    this.$message.error("system error, pleases try later");
+                })
             },
 
 
