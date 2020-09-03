@@ -42,6 +42,10 @@
                         index: 'tourList',
                         title: 'Tours Management'
                     },
+                    {   icon: 'el-icon-lx-cascades',
+                        index: 'hotelList',
+                        title: 'Hotel Management'
+                    },
                     {
                         icon: 'el-icon-lx-home',
                         index: 'dashboard',

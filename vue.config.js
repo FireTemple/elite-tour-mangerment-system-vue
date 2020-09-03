@@ -15,7 +15,7 @@ module.exports = {
     devServer: {
         proxy: {
             '/test': {
-                target: 'http://47.88.60.175:8081',
+                target: 'http://localhost:8081',
                 pathReWrite:{
                     '^/test': ''
                 },
@@ -23,7 +23,7 @@ module.exports = {
                 secure:false
             },
             '/api': {
-                target: 'http://47.88.60.175:8081',
+                target: 'http://localhost:8081',
                 pathReWrite:{
                     '^/api': ''
                 },

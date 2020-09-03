@@ -2,14 +2,14 @@
     <div class="table">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-cascades"></i>Tour list</el-breadcrumb-item>
+                <el-breadcrumb-item><i class="el-icon-lx-cascades"></i>Hotel list</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
 
         <!-- table -->
         <div class="container">
             <div class="handle-box">
-                <el-select v-model="selectCountry" placeholder="counrtry" class="handle-select mr10">
+                <el-select v-model="selectCountry" placeholder="country" class="handle-select mr10">
                     <el-option key="1" label="USA" value="USA"></el-option>
                     <el-option key="2" label="India" value="India"></el-option>
                 </el-select>
@@ -22,25 +22,26 @@
                 <el-button type="warning" icon="el-icon-refresh" @click="refresh">refresh</el-button>
             </div>
 
-            <el-table :data="tours" border class="table" ref="multipleTable" :stripe="true">
+            <el-table :data="hotels" border class="table" ref="multipleTable" :stripe="true">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="Tour id" width="150">
+                <el-table-column prop="id" label="hotel id" width="150" :show-overflow-tooltip="true">
                 </el-table-column>
                 <el-table-column prop="name" label="name" width="120">
                 </el-table-column>
-                <el-table-column prop="description" label="description(brief)" width="120">
+                <el-table-column prop="description" label="description(brief)" width="120"
+                                 :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="details" label="description(detail)">
-                </el-table-column>
-
-                <el-table-column prop="duration" label="duration">
+                <el-table-column prop="details" label="description(detail)" :show-overflow-tooltip="true">
                 </el-table-column>
 
-                <el-table-column prop="country" label="country">
+                <el-table-column prop="address" label="address" :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="countryArea" label="countryArea">
+
+                <el-table-column prop="cPrice" label="current price">
                 </el-table-column>
-                <el-table-column prop="detailsLink" label="detailsLink">
+                <el-table-column prop="pPrice" label="past price">
+                </el-table-column>
+                <el-table-column prop="detailsLink" label="detailsLink" :show-overflow-tooltip="true">
                 </el-table-column>
                 <el-table-column
                         prop="status"
@@ -58,7 +59,7 @@
                 </el-table-column>
                 <el-table-column label="Operation" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="getTour(scope.row.id)">edit</el-button>
+                        <el-button type="text" icon="el-icon-edit" @click="getHotel(scope.row.id)">edit</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="deleteTour(scope.row.id)"
                                    v-show="scope.row.status !== '3'">delete
                         </el-button>
@@ -77,213 +78,79 @@
             </div>
         </div>
 
-        <!-- 编辑弹出框 -->
-        <el-dialog title="edit" :visible.sync="editVisible" width="50%">
-            <el-form ref="editTour" :model="editTour" label-width="80px">
+        <!-- edit-->
+        <el-dialog title="add new tour" :visible.sync="editVisible" width="50%">
+            <el-form ref="addTour" :model="editHotel" label-width="80px">
                 <h4>Basic Information</h4>
-                <el-form-item label="Tour id" prop="name">
-                    <el-input v-model="editTour.id" disabled></el-input>
-                </el-form-item>
                 <el-form-item label="Tour name" prop="name">
-                    <el-input v-model="editTour.name"></el-input>
+                    <el-input v-model="editHotel.name"></el-input>
                 </el-form-item>
                 <el-form-item label="description" prop="description">
-                    <el-input v-model="editTour.description"></el-input>
+                    <el-input v-model="editHotel.description"></el-input>
                 </el-form-item>
                 <el-form-item label="details" prop="details">
-                    <el-input v-model="editTour.details"></el-input>
+                    <el-input v-model="editHotel.details"></el-input>
                 </el-form-item>
-                <el-form-item label="duration" prop="duration">
-                    <el-input v-model="editTour.duration"></el-input>
+                <el-form-item label="address" prop="address">
+                    <el-input v-model="editHotel.address"></el-input>
                 </el-form-item>
-                <el-form-item label="max duration" prop="maxDuration">
-                    <el-input v-model="editTour.maxDuration"></el-input>
-                </el-form-item>
-                <el-form-item label="country" prop="country">
-                    <el-select v-model="editTour.country" placeholder="country" @change="selectArea">
-                        <el-option key="1" label="India" value="India"></el-option>
-                        <el-option key="2" label="USA" value="USA"></el-option>
-                        <el-option key="3" label="France" value="France"></el-option>
-                        <el-option key="4" label="Germany" value="Germany"></el-option>
-                        <el-option key="5" label="Spain" value="Spain"></el-option>
-                        <el-option key="6" label="Qatar" value="Qatar"></el-option>
-                    </el-select>
+                <el-form-item label="current price" prop="cPrice">
+                    <el-input v-model="editHotel.cPrice"></el-input>
                 </el-form-item>
 
-                <el-form-item label="Area" prop="countryArea">
-                    <el-select v-model="editTour.countryArea" placeholder="area">
-                        <el-option v-for="item in currentOption" :key="item.id" :label="item.label"
-                                   :value="item.content"></el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="details link" prop="detailsLink">
-                    <el-input v-model="editTour.detailsLink"></el-input>
+                    <el-input v-model="editHotel.detailsLink"></el-input>
                 </el-form-item>
 
                 <el-form-item label="tour status" prop="status">
-                    <el-select v-model="editTour.status" placeholder="1: active,2: inactive,3: deleted">
+                    <el-select v-model="editHotel.status" placeholder="1: active,2: inactive,3: deleted">
                         <el-option key="1" label="active" value="1"></el-option>
                         <el-option key="2" label="inactive" value="2"></el-option>
                         <el-option key="3" label="deleted" value="3"></el-option>
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="past price" prop="pPrice">
-                    <el-input v-model="editTour.pPrice"></el-input>
-                </el-form-item>
-                <el-form-item label="current price" prop="cPrice">
-                    <el-input v-model="editTour.cPrice"></el-input>
-                </el-form-item>
-
                 <el-form-item label="type" prop="type">
-                    <el-select v-model="editTour.type" placeholder="popular top-rate normal">
+                    <el-select v-model="editHotel.type" placeholder="popular top-rate normal">
                         <el-option key="1" label="popular" value="3"></el-option>
                         <el-option key="2" label="top rate" value="2"></el-option>
                         <el-option key="3" label="normal" value="1"></el-option>
                     </el-select>
                 </el-form-item>
                 <h4>Services</h4>
-                <el-form-item label="Accessibility" prop="hasAccessibility">
-                    <el-select v-model="editTour.hasAccessibility" placeholder="no">
+                <el-form-item label="has wifi" prop="hasWifi">
+                    <el-select v-model="editHotel.hasWifi" placeholder="no">
                         <el-option key="1" label="has" value="1"></el-option>
                         <el-option key="2" label="no" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="allot pet" prop="isAllowedPet">
-                    <el-select v-model="editTour.isAllowedPet" placeholder="no">
+                <el-form-item label="has accessibility" prop="hasAccessibility">
+                    <el-select v-model="editHotel.hasAccessibility" placeholder="no">
                         <el-option key="1" label="yes" value="1"></el-option>
                         <el-option key="2" label="no" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="has audio guide" prop="hasAudioGuide">
-                    <el-select v-model="editTour.hasAudioGuide" placeholder="no">
-                        <el-option key="1" label="has" value="1"></el-option>
-                        <el-option key="2" label="no" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="has tour guide" prop="hasTourGuide">
-                    <el-select v-model="editTour.hasTourGuide" placeholder="no">
-                        <el-option key="1" label="has" value="1"></el-option>
-                        <el-option key="2" label="no" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-
-                <el-form-item label="item description" prop="includeDescription">
-                    <el-input v-model="editTour.includeDescription"></el-input>
-                </el-form-item>
-
-                <el-form-item v-for="(item, index) in editTour.includeItems" :label="'Include Service' + index"
-                              :key="item.key" prop="includeItems">
-                    <el-input v-model="item.content" @input="change"></el-input>
-                    <el-button @click.prevent="removeItem(item)">delete</el-button>
-                </el-form-item>
-
-                <el-form-item>
-                    <el-button @click="addDomain">add</el-button>
-                </el-form-item>
-
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                    <el-button @click="cancelEdit">Cancel</el-button>
-                    <el-button type="primary" @click="updateTour">Save</el-button>
-                </span>
-        </el-dialog>
-        <!-- create form -->
-        <el-dialog title="add new tour" :visible.sync="addVisible" width="50%">
-            <el-form ref="addTour" :model="editTour" label-width="80px">
-                <h4>Basic Information</h4>
-                <el-form-item label="Tour name" prop="name">
-                    <el-input v-model="editTour.name"></el-input>
-                </el-form-item>
-                <el-form-item label="description" prop="description">
-                    <el-input v-model="editTour.description"></el-input>
-                </el-form-item>
-                <el-form-item label="details" prop="details">
-                    <el-input v-model="editTour.details"></el-input>
-                </el-form-item>
-                <el-form-item label="duration" prop="duration">
-                    <el-input v-model="editTour.duration"></el-input>
-                </el-form-item>
-                <el-form-item label="max duration" prop="maxDuration">
-                    <el-input v-model="editTour.maxDuration"></el-input>
-                </el-form-item>
-                <el-form-item label="country" prop="country">
-                    <el-select v-model="editTour.country" placeholder="country" @change="selectArea">
-                        <el-option key="1" label="India" value="India"></el-option>
-                        <el-option key="2" label="USA" value="USA"></el-option>
-                        <el-option key="3" label="France" value="France"></el-option>
-                        <el-option key="4" label="Germany" value="Germany"></el-option>
-                        <el-option key="5" label="Spain" value="Spain"></el-option>
-                        <el-option key="6" label="Qatar" value="Qatar"></el-option>
-                    </el-select>
-                </el-form-item>
-
-                <el-form-item label="Area" prop="countryArea">
-                    <el-select v-model="editTour.countryArea" placeholder="area">
-                        <el-option v-for="item in currentOption" :key="item.id" :label="item.label"
-                                   :value="item.content"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="details link" prop="detailsLink">
-                    <el-input v-model="editTour.detailsLink"></el-input>
-                </el-form-item>
-
-                <el-form-item label="tour status" prop="status">
-                    <el-select v-model="editTour.status" placeholder="1: active,2: inactive,3: deleted">
-                        <el-option key="1" label="active" value="1"></el-option>
-                        <el-option key="2" label="inactive" value="2"></el-option>
-                        <el-option key="3" label="deleted" value="3"></el-option>
-                    </el-select>
-                </el-form-item>
-
-                <el-form-item label="past price" prop="pPrice">
-                    <el-input v-model="editTour.pPrice"></el-input>
-                </el-form-item>
-                <el-form-item label="current price" prop="cPrice">
-                    <el-input v-model="editTour.cPrice"></el-input>
-                </el-form-item>
-
-                <el-form-item label="type" prop="type">
-                    <el-select v-model="editTour.type" placeholder="popular top-rate normal">
-                        <el-option key="1" label="popular" value="3"></el-option>
-                        <el-option key="2" label="top rate" value="2"></el-option>
-                        <el-option key="3" label="normal" value="1"></el-option>
-                    </el-select>
-                </el-form-item>
-                <h4>Services</h4>
-                <el-form-item label="Accessibility" prop="hasAccessibility">
-                    <el-select v-model="editTour.hasAccessibility" placeholder="no">
-                        <el-option key="1" label="has" value="1"></el-option>
-                        <el-option key="2" label="no" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="allot pet" prop="isAllowedPet">
-                    <el-select v-model="editTour.isAllowedPet" placeholder="no">
+                <el-form-item label="has TV" prop="hasTV">
+                    <el-select v-model="editHotel.hasTV" placeholder="no">
                         <el-option key="1" label="yes" value="1"></el-option>
                         <el-option key="2" label="no" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="has audio guide" prop="hasAudioGuide">
-                    <el-select v-model="editTour.hasAudioGuide" placeholder="no">
+                <el-form-item label="has pool" prop="hasPool">
+                    <el-select v-model="editHotel.hasPool" placeholder="no">
                         <el-option key="1" label="has" value="1"></el-option>
                         <el-option key="2" label="no" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="has tour guide" prop="hasTourGuide">
-                    <el-select v-model="editTour.hasTourGuide" placeholder="no">
+                <el-form-item label="has fitness" prop="hasFitness">
+                    <el-select v-model="editHotel.hasFitness" placeholder="no">
                         <el-option key="1" label="has" value="1"></el-option>
                         <el-option key="2" label="no" value="2"></el-option>
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="item description" prop="includeDescription">
-                    <el-input v-model="editTour.includeDescription"></el-input>
-                </el-form-item>
-
-                <el-form-item v-for="(item, index) in editTour.includeItems" :label="'Include Service' + index"
-                              :key="item.key" prop="includeItems">
-                    <el-input v-model="item.content" @input="change"></el-input>
-                    <el-button @click.prevent="removeItem(item)">delete</el-button>
+                <el-form-item label="has restaurant" prop="includeDescription">
+                    <el-input v-model="editHotel.hasRestaurant"></el-input>
                 </el-form-item>
 
                 <el-form-item>
@@ -293,7 +160,160 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                     <el-button @click="cancelAdd">Cancel</el-button>
-                    <el-button type="primary" @click="createTour">Create</el-button>
+                    <el-button type="primary" @click="createHotel">Create</el-button>
+            </span>
+        </el-dialog>
+        <!-- create form -->
+        <el-dialog title="add new hotel" :visible.sync="addVisible" width="70%">
+            <el-form ref="addHotel" :model="editHotel" label-width="150px">
+                <h4>Basic Information</h4>
+                <el-form-item label="hotel name" prop="name">
+                    <el-input v-model="editHotel.name"></el-input>
+                </el-form-item>
+                <el-form-item label="description" prop="description">
+                    <el-input v-model="editHotel.description"></el-input>
+                </el-form-item>
+                <el-form-item label="details" prop="details">
+                    <el-input v-model="editHotel.details"></el-input>
+                </el-form-item>
+                <el-form-item label="address" prop="address">
+                    <el-input v-model="editHotel.address"></el-input>
+                </el-form-item>
+                <el-form-item label="current price" prop="cPrice">
+                    <el-input v-model="editHotel.cPrice"></el-input>
+                </el-form-item>
+                <el-form-item label="past price" prop="cPrice">
+                    <el-input v-model="editHotel.pPrice"></el-input>
+                </el-form-item>
+                <el-form-item label="details link" prop="detailsLink">
+                    <el-input v-model="editHotel.detailsLink"></el-input>
+                </el-form-item>
+
+                <el-form-item label="hotel status" prop="status">
+                    <el-select v-model="editHotel.status" placeholder="1: active,2: inactive,3: deleted">
+                        <el-option key="1" label="active" value="1"></el-option>
+                        <el-option key="2" label="inactive" value="2"></el-option>
+                        <el-option key="3" label="deleted" value="3"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="type" prop="type">
+                    <el-select v-model="editHotel.type" placeholder="popular top-rate normal">
+                        <el-option key="1" label="popular" value="3"></el-option>
+                        <el-option key="2" label="top rate" value="2"></el-option>
+                        <el-option key="3" label="normal" value="1"></el-option>
+                    </el-select>
+                </el-form-item>
+                <h4>Services</h4>
+                <el-form-item label="has accessibility" prop="hasAccessibility">
+                    <el-select v-model="editHotel.hasAccessibility" placeholder="no">
+                        <el-option key="1" label="yes" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="has wifi" prop="hasWifi">
+                    <el-select v-model="editHotel.hasWifi" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="has TV" prop="hasTV">
+                    <el-select v-model="editHotel.hasTV" placeholder="no">
+                        <el-option key="1" label="yes" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="has pool" prop="hasPool">
+                    <el-select v-model="editHotel.hasPool" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="has fitness" prop="hasFitness">
+                    <el-select v-model="editHotel.hasFitness" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="has restaurant" prop="hasRestaurant">
+                    <el-select v-model="editHotel.hasRestaurant" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="allow pet" prop="allowPet">
+                    <el-select v-model="editHotel.allowPet" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="has restaurant" prop="hasParking">
+                    <el-select v-model="editHotel.hasParking" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="has breakfast" prop="hasBreakfast">
+                    <el-select v-model="editHotel.hasBreakfast" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
+                <h4>Room Type</h4>
+                <br>
+                <el-form-item v-for="(item, index) in editHotel.rooms" :label="'Room: ' + (index + 1)"
+                              :key="item.key" prop="rooms">
+                    <p>type</p>
+                    <el-input v-model="item.type"></el-input>
+                    <p>description</p>
+                    <el-input v-model="item.des"></el-input>
+                    <p>has wifi</p>
+                    <el-select v-model="item.hasWifi" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                    <p>wifi description</p>
+                    <el-input v-model="item.wifiDes" v-show="item.hasWifi === '1'"></el-input>
+                    <p>has TV</p>
+                    <el-select v-model="item.hasTV" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                    <p>TV description </p>
+                    <el-input v-model="item.tvDes" v-show="item.hasTV === '1'"></el-input>
+                    <p>has safety Box</p>
+                    <el-select v-model="item.hasSafetyBox" placeholder="no">
+                        <el-option key="1" label="has" value="1"></el-option>
+                        <el-option key="2" label="no" value="2"></el-option>
+                    </el-select>
+                    <p>safety Box description</p>
+                    <el-input v-model="item.safetyBoxDes" v-show="item.hasSafetyBox === '1'"></el-input>
+                    <el-button @click.prevent="removeRoom(index)">delete</el-button>
+
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button @click="addDomain">add</el-button>
+                </el-form-item>
+
+                <h4>Facilities</h4>
+                <el-form-item label="description" prop="description">
+                    <el-input v-model="editHotel.facilitiesDes"></el-input>
+                </el-form-item>
+                <el-form-item v-for="(item, index) in editHotel.facilities" :label="'facilities: ' + (index + 1)"
+                              :key="item.key" prop="des">
+                    <el-input v-model="item.des" @input="change"></el-input>
+                    <el-button @click.prevent="removeFacility(index)">delete</el-button>
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button @click="addFacility">add</el-button>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                    <el-button @click="cancelAdd">Cancel</el-button>
+                    <el-button type="primary" @click="createHotel">Create</el-button>
             </span>
         </el-dialog>
 
@@ -330,8 +350,8 @@
         name: 'tourListTable',
         data() {
             return {
-                tours: [],
-                tempTours: [],
+                hotels: [],
+                tempHotels: [],
 
                 /**
                  * show hidden form
@@ -339,55 +359,56 @@
                 editVisible: false,
                 uploadImgVisible: false,
                 addVisible: false,
-                editTour: {
+
+                editHotel: {
                     id: '',
                     name: '',
                     description: '',
                     details: '',
-                    duration: '',
-                    maxDuration: '',
-                    country: '',
-                    countryArea: '',
+                    address: '',
+                    cPrice: '',
+                    pPrice: '',
                     detailsLink: '',
                     status: '',
-                    pPrice: '',
-                    cPrice: '',
                     type: '',
+                    hasWifi: '',
+                    hasTV: '',
+                    hasPool: '',
+                    hasFitness: '',
+                    hasRestaurant: '',
+                    allowPet: '',
                     hasAccessibility: '',
-                    isAllowedPet: '',
-                    hasAudioGuide: '',
-                    hasTourGuide: '',
-                    includeDescription: '',
-                    includeItems: [
-                        {content: '', id: 'kjhkjhkj'}
+                    hasParking: '',
+                    hasBreakfast: '',
+                    facilitiesDes: '',
+                    rooms: [
+                        {
+                            type: '',
+                            des: '',
+                            hasWifi: '',
+                            wifiDes: '',
+                            tvDes: '',
+                            hasTV: '',
+                            hasSafetyBox: '',
+                            safteyBoxDes: ''
+                        }
+                    ],
+                    facilities: [
+                        {des:'',key:'1'}
                     ]
                 },
-                areasOption: [
-                    [
-                        {key: "1", label: 'rohtok', content: 'rohtok'},
-                        {key: "2", label: 'rudrapur area', content: 'rudrapur area'},
-                    ],
-                    [
-                        {key: "1", label: 'Detroit City', content: 'Detroit City'},
-                        {key: "2", label: 'Lansing', content: 'Lansing'},
-                        {key: "3", label: 'New York', content: 'New York'},
-                        {key: "4", label: 'Ann Arbor', content: 'Ann Arbor'},
-                        {key: "5", label: 'Toledo', content: 'Toledo'},
-                    ],
 
-                ],
+                // for create rooms temple
+                templeRoom: {},
 
-                currentOption: [],
                 fileList: [],
                 url: '',
-
                 /**
                  * filter data
                  */
                 selectName: '',
                 selectCountry: '',
                 selectDuration: '',
-
 
             }
         },
@@ -403,28 +424,27 @@
             getData() {
                 this.$axios({
                     method: 'get',
-                    url: '/api/tours',
+                    url: '/api/hotels',
                 }).then(res => {
-                    this.tours = res.data;
-                    this.tempTours = res.data;
+                    this.hotels = res.data;
+                    this.tempHotels = res.data;
                 }).catch(error => {
                     this.$message.error(error.message);
                 })
             },
-            selectArea() {
-                if (this.editTour.country === 'India') {
-                    this.currentOption = this.areasOption[0];
-                } else if (this.editTour.country === 'USA') {
-                    this.currentOption = this.areasOption[1];
-                }
-                //clean
-                this.editTour.countryArea = '';
-            },
             addDomain() {
-                this.editTour.includeItems.push({
-                    value: '',
-                    key: Date.now()
-                });
+                this.editHotel.rooms.push({
+                        type: '',
+                        des: '',
+                        hasWifi: '',
+                        wifiDes: '',
+                        tvDes: '',
+                        hasTV: '',
+                        hasSafetyBox: '',
+                        safetyBoxDes: '',
+                        key: new Date()
+                    }
+                );
                 this.$forceUpdate();
             },
             filterStatus(value, row) {
@@ -444,51 +464,75 @@
             },
 
             /**
-             * get tour details
+             * get Hotel details
              */
-            getTourDetail(id) {
+            getHotelDetail(id) {
                 return this.$axios({
                     method: 'get',
-                    url: '/api/tour/' + id,
+                    url: '/api/hotel/' + id,
                 });
             },
-            getTourIncludeItem(id) {
+            getHotelsRooms(id) {
                 return this.$axios({
                     method: 'get',
                     url: '/api/includeItem/' + id,
                 });
             },
-            getTour(id) {
+            getHotelsFacilities(id) {
+                return this.$axios({
+                    method: 'get',
+                    url: '/api/includeItem/' + id,
+                });
+            },
+
+            getHotel(id) {
                 let self = this;
-                this.$axios.all([this.getTourDetail(id), this.getTourIncludeItem(id)])
-                    .then(this.$axios.spread(function (res1, res2) {
-                        self.editTour = res1.data;
-                        console.log(res2.data);
-                        self.editTour.includeItems = res2.data;
+                this.$axios.all([this.getHotelDetail(id), this.getHotelsRooms(id), this.getHotelsFacilities(id)])
+                    .then(this.$axios.spread(function (res1, res2, res3) {
+                        self.editHotel = res1.data;
+                        self.editHotel.rooms = res2.data;
+                        self.editHotel.facilities = res3.data;
                         self.$forceUpdate();
                         self.editVisible = true;
                     }))
             },
 
+
             /**
              * operation methods
              */
-            removeItem(item) {
-                let index = this.editTour.includeItems.indexOf(item)
+            removeRoom(index) {
                 if (index !== -1) {
-                    this.editTour.includeItems.splice(index, 1)
+                    this.editHotel.rooms.splice(index, 1)
                 }
-                this.$axios({
-                    method: 'delete',
-                    url: '/api/includeItem/' + item.id
-                }).then(res => {
-                    console.log(res);
-                }).catch(error => {
-                    console.log(error);
-                })
-
+                if (!this.addVisible) {
+                    this.$axios({
+                        method: 'delete',
+                        url: '/api/includeItem/' + this.editHotel.rooms[index].id
+                    }).then(res => {
+                        console.log(res);
+                    }).catch(error => {
+                        console.log(error);
+                    })
+                }
                 this.$forceUpdate();
 
+            },
+            removeFacility(index){
+                if (index !== -1) {
+                    this.editHotel.facilities.splice(index, 1)
+                }
+                if (!this.addVisible) {
+                    this.$axios({
+                        method: 'delete',
+                        url: '/api/' + this.editHotel.facilities[index].id
+                    }).then(res => {
+                        console.log(res);
+                    }).catch(error => {
+                        console.log(error);
+                    })
+                }
+                this.$forceUpdate();
             },
             updateTour() {
                 this.$axios({
@@ -511,8 +555,8 @@
                     type: 'warning'
                 }).then(() => {
                     this.$axios({
-                        method:'delete',
-                        url:'/api/tour/' + id
+                        method: 'delete',
+                        url: '/api/tour/' + id
                     }).then(res => {
                         this.$message.success(res.msg);
                         this.getData();
@@ -525,6 +569,14 @@
                         message: 'already canceled'
                     });
                 });
+            },
+            addFacility(){
+                this.editHotel.facilities.push({
+                        content:'',
+                        key: new Date()
+                    }
+                );
+                this.$forceUpdate();
             },
             // logical delete
             deleteTour(id) {
@@ -609,12 +661,12 @@
                 this.resetForm('addTour');
                 this.addVisible = true;
             },
-            createTour() {
-                let data = JSON.stringify(this.editTour);
+            createHotel() {
+                let data = JSON.stringify(this.editHotel);
                 console.log(data);
                 this.$axios({
                     method: 'post',
-                    url: "/api/tour",
+                    url: "/api/hotel",
                     data: data
                 }).then(res => {
                     this.$message.success(res.msg);

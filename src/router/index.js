@@ -107,6 +107,11 @@ export default new Router({
                     path: '/tourList',
                     component: resolve => require(['../view/tour/TourListTable'], resolve),
                     meta: { title: 'Tour list' }
+                },
+                {
+                    path: '/hotelList',
+                    component: resolve => require(['../view/hotel/HotelListTable'], resolve),
+                    meta: { title: 'Hotel list' }
                 }
             ]
         },
