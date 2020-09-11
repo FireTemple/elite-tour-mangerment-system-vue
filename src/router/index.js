@@ -112,6 +112,11 @@ export default new Router({
                     path: '/hotelList',
                     component: resolve => require(['../view/hotel/HotelListTable'], resolve),
                     meta: { title: 'Hotel list' }
+                },
+                {
+                    path: '/resList',
+                    component: resolve => require(['../view/res/ResListTable'], resolve),
+                    meta: { title: 'restaurant list' }
                 }
             ]
         },

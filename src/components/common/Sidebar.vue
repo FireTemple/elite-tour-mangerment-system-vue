@@ -46,6 +46,10 @@
                         index: 'hotelList',
                         title: 'Hotel Management'
                     },
+                    {   icon: 'el-icon-lx-cascades',
+                        index: 'resList',
+                        title: 'restaurant Management'
+                    },
                     {
                         icon: 'el-icon-lx-home',
                         index: 'dashboard',
