@@ -1,22 +1,22 @@
 <template>
     <div class="login-wrap">
         <div class="ms-login">
-            <div class="ms-title">后台管理系统</div>
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
+            <div class="ms-title">Elite Tour Management System</div>
+            <el-form :model="loginForm" :rules="rules" ref="ruleForm" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
-                    <el-input v-model="ruleForm.username" placeholder="username">
+                    <el-input v-model="loginForm.username" placeholder="username">
                         <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')">
+                    <el-input type="password" placeholder="password" v-model="loginForm.password" @keyup.enter.native="submitForm('ruleForm')">
                         <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
                     </el-input>
                 </el-form-item>
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
                 </div>
-                <p class="login-tips">Tips : 用户名和密码随便填。</p>
+                <p class="login-tips">Tips : xxxxxxxx。</p>
             </el-form>
         </div>
     </div>
@@ -26,16 +26,17 @@
     export default {
         data: function(){
             return {
-                ruleForm: {
-                    username: 'admin',
-                    password: '123123'
+                loginForm: {
+                    username: '',
+
+                    password: ''
                 },
                 rules: {
                     username: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
+                        { required: true, message: 'username', trigger: 'blur' }
                     ],
                     password: [
-                        { required: true, message: '请输入密码', trigger: 'blur' }
+                        { required: true, message: 'password', trigger: 'blur' }
                     ]
                 }
             }
@@ -44,13 +45,27 @@
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        localStorage.setItem('ms_username',this.ruleForm.username);
-                        this.$router.push('/');
+                        this.$axios({
+                            method: 'post',
+                            data: this.loginForm,
+                            url:'/api/login'
+                        }).then(res => {
+                            if (res.code === 0){
+                                this.$message.success("login successfully!");
+                                localStorage.setItem('userId', res.data.id);
+                                localStorage.setItem('userInfo', JSON.stringify(res.data));
+                                console.log(localStorage.getItem('userInfo'))
+                                this.$router.push('/dashboard');
+                            } else {
+                                this.$message.error(res.msg);
+                            }
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
                 });
+
             }
         }
     }

@@ -17,7 +17,7 @@ export default new Router({
                 {
                     path: '/dashboard',
                     component: resolve => require(['../components/page/Dashboard.vue'], resolve),
-                    meta: { title: '系统首页' }
+                    meta: { title: 'Dash board' }
                 },
                 {
                     path: '/icon',

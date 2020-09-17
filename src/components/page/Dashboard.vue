@@ -10,20 +10,19 @@
                             <div>{{role}}</div>
                         </div>
                     </div>
-                    <div class="user-info-list">上次登录时间：<span>2018-01-01</span></div>
-                    <div class="user-info-list">上次登录地点：<span>东莞</span></div>
+                    <div class="user-info-list">last login time：<span>2020-01-01</span></div>
                 </el-card>
                 <el-card shadow="hover" style="height:252px;">
                     <div slot="header" class="clearfix">
-                        <span>语言详情</span>
+                        <span>Income contribution</span>
                     </div>
-                    Vue
+                    Tours
                     <el-progress :percentage="71.3" color="#42b983"></el-progress>
-                    JavaScript
+                    Transfer
                     <el-progress :percentage="24.1" color="#f1e05a"></el-progress>
-                    CSS
+                    Restaurant
                     <el-progress :percentage="3.7"></el-progress>
-                    HTML
+                    Other
                     <el-progress :percentage="0.9" color="#f56c6c"></el-progress>
                 </el-card>
             </el-col>
@@ -35,7 +34,7 @@
                                 <i class="el-icon-lx-people grid-con-icon"></i>
                                 <div class="grid-cont-right">
                                     <div class="grid-num">1234</div>
-                                    <div>用户访问量</div>
+                                    <div>User Visited Times</div>
                                 </div>
                             </div>
                         </el-card>
@@ -46,7 +45,7 @@
                                 <i class="el-icon-lx-notice grid-con-icon"></i>
                                 <div class="grid-cont-right">
                                     <div class="grid-num">321</div>
-                                    <div>系统消息</div>
+                                    <div>Unprocessed Request</div>
                                 </div>
                             </div>
                         </el-card>
@@ -57,7 +56,7 @@
                                 <i class="el-icon-lx-goods grid-con-icon"></i>
                                 <div class="grid-cont-right">
                                     <div class="grid-num">5000</div>
-                                    <div>数量</div>
+                                    <div>Earn</div>
                                 </div>
                             </div>
                         </el-card>
@@ -65,8 +64,8 @@
                 </el-row>
                 <el-card shadow="hover" style="height:403px;">
                     <div slot="header" class="clearfix">
-                        <span>待办事项</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">添加</el-button>
+                        <span>Todo list</span>
+                        <el-button style="float: right; padding: 3px 0" type="text">add</el-button>
                     </div>
                     <el-table :data="todoList" :show-header="false" height="304" style="width: 100%;font-size:14px;">
                         <el-table-column width="40">
@@ -111,32 +110,35 @@
         name: 'dashboard',
         data() {
             return {
-                name: localStorage.getItem('ms_username'),
-                todoList: [{
-                        title: '今天要修复100个bug',
+                id: '',
+                name: '',
+                todoList: [
+                    {
+                        title: 'event 1',
                         status: false,
                     },
                     {
-                        title: '今天要修复100个bug',
+                        title: 'event 2',
                         status: false,
                     },
                     {
-                        title: '今天要写100行代码加几个bug吧',
+                        title: 'event 3',
                         status: false,
                     }, {
-                        title: '今天要修复100个bug',
+                        title: 'event 4',
                         status: false,
                     },
                     {
-                        title: '今天要修复100个bug',
+                        title: 'event 5',
                         status: true,
                     },
                     {
-                        title: '今天要写100行代码加几个bug吧',
+                        title: 'event 6',
                         status: true,
                     }
                 ],
-                data: [{
+                data: [
+                    {
                         name: '2018/09/04',
                         value: 1083
                     },
@@ -166,14 +168,14 @@
                     }
                 ],
                 options: {
-                    title: '最近七天每天的用户访问量',
+                    title: 'Daily user visits in the last seven days',
                     showValue: false,
                     fillColor: 'rgb(45, 140, 240)',
                     bottomPadding: 30,
                     topPadding: 30
                 },
                 options2: {
-                    title: '最近七天用户访问趋势',
+                    title: 'User access trends in the last seven days',
                     fillColor: '#FC6FA1',
                     axisColor: '#008ACD',
                     contentColor: '#EEEEEE',
@@ -188,10 +190,11 @@
         },
         computed: {
             role() {
-                return this.name === 'admin' ? '超级管理员' : '普通用户';
+                return this.name === 'admin' ? 'super administrator' : 'administrator';
             }
         },
         created(){
+            this.getUserInfo();
             this.handleListener();
             this.changeDate();
         },
@@ -203,6 +206,11 @@
             bus.$off('collapse', this.handleBus);
         },
         methods: {
+            getUserInfo(){
+                let userInfo = JSON.parse(localStorage.getItem('userInfo'));
+                console.log(userInfo);
+                this.name = userInfo.firstName + ' ' + userInfo.lastName;
+            },
             changeDate(){
                 const now = new Date().getTime();
                 this.data.forEach((item, index) => {

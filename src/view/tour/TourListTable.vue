@@ -6,6 +6,41 @@
             </el-breadcrumb>
         </div>
 
+        <!-- hidden table for special use -->
+        <el-drawer
+                title="Tour classification"
+                :visible.sync="drawer"
+                :direction="direction"
+        >
+            <div class="special-area">
+                <el-dropdown @command="filterSpecial" style="margin-bottom: 20px">
+                    <!--                    <p>Current type:{{currentType === '' ? 'none' : currentType}}</p>-->
+                    <el-button type="primary">
+                        Select<i class="el-icon-arrow-down el-icon--right"></i>
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="1">Top Tours</el-dropdown-item>
+                        <el-dropdown-item command="2">New Tours</el-dropdown-item>
+                        <el-dropdown-item command="3">Popular Tours</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <el-table :data="specialTours" border class="table" ref="multipleTable" :stripe="true"
+                          v-loading="loading">
+                    <el-table-column prop="itemId" label="Tour id" width="150" :show-overflow-tooltip="true">
+                    </el-table-column>
+                    <el-table-column prop="name" label="name" width="120" :show-overflow-tooltip="true">
+                    </el-table-column>
+                    <el-table-column label="Operation" width="180" align="center">
+                        <template slot-scope="scope">
+                            <el-button type="text" icon="el-icon-delete" class="red"
+                                       @click="deleteRecord(scope.row.id,scope.$index)">
+                                delete
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </el-drawer>
         <!-- table -->
         <div class="container">
             <div class="handle-box">
@@ -20,17 +55,21 @@
                 <el-button type="danger" icon="el-icon-close" @click="clearFilter">clear filter</el-button>
                 <el-button type="success" icon="el-icon-zoom-in" @click="add">add</el-button>
                 <el-button type="warning" icon="el-icon-refresh" @click="refresh">refresh</el-button>
-            </div>
 
+                <el-button @click="drawer = true" type="primary" style="margin-left: 16px;">
+                    classification
+                </el-button>
+            </div>
             <el-table :data="tours" border class="table" ref="multipleTable" :stripe="true">
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="Tour id" width="150">
                 </el-table-column>
-                <el-table-column prop="name" label="name" width="120">
+                <el-table-column prop="name" label="name" width="120" :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="description" label="description(brief)" width="120">
+                <el-table-column prop="description" label="description(brief)" width="120"
+                                 :show-overflow-tooltip="true">
                 </el-table-column>
-                <el-table-column prop="details" label="description(detail)">
+                <el-table-column prop="details" label="description(detail)" :show-overflow-tooltip="true">
                 </el-table-column>
 
                 <el-table-column prop="duration" label="duration">
@@ -40,7 +79,7 @@
                 </el-table-column>
                 <el-table-column prop="countryArea" label="countryArea">
                 </el-table-column>
-                <el-table-column prop="detailsLink" label="detailsLink">
+                <el-table-column prop="detailsLink" label="detailsLink" :show-overflow-tooltip="true">
                 </el-table-column>
                 <el-table-column
                         prop="status"
@@ -68,6 +107,10 @@
                         <el-button type="text" icon="el-icon-delete" class="green" @click="waveData(scope.row.id)">wave
                             record
                         </el-button>
+                        <el-button type="text" icon="el-icon-star-on" class="green" @click="doClassification(scope.row.id)"
+                                   v-show="scope.row.status === '1'">
+                            mark as
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -77,6 +120,22 @@
             </div>
         </div>
 
+        <!-- do classification -->
+        <el-dialog title="classification" :visible.sync="classificationVisible" width="20%">
+            <div class="info">
+                <p> <strong>Select Tour id</strong>: {{classifiSelectId === '' ? "select error pleases try again" : classifiSelectId}}</p>
+            </div>
+            <el-dropdown @command="mark" style="margin-bottom: 20px">
+                <!--                    <p>Current type:{{currentType === '' ? 'none' : currentType}}</p>-->
+                <el-select v-model="markTo" placeholder="no">
+                    <el-option key="1" label="Top Tours" value="1"></el-option>
+                    <el-option key="2" label="New Tours" value="2"></el-option>
+                    <el-option key="3" label="Popular Tours" value="3"></el-option>
+                </el-select>
+                <el-button type="success" @click="markAs(markTo,classifiSelectId)">mark</el-button>
+            </el-dropdown>
+
+        </el-dialog>
         <!-- 编辑弹出框 -->
         <el-dialog title="edit" :visible.sync="editVisible" width="50%">
             <el-form ref="editTour" :model="editTour" label-width="80px">
@@ -322,6 +381,7 @@
             </span>
         </el-dialog>
 
+
     </div>
 </template>
 
@@ -330,15 +390,16 @@
         name: 'tourListTable',
         data() {
             return {
+                specialTours: [],
                 tours: [],
                 tempTours: [],
-
                 /**
                  * show hidden form
                  */
                 editVisible: false,
                 uploadImgVisible: false,
                 addVisible: false,
+                classificationVisible: false,
                 editTour: {
                     id: '',
                     name: '',
@@ -388,7 +449,18 @@
                 selectCountry: '',
                 selectDuration: '',
 
+                /**
+                 *  drawer
+                 */
+                drawer: false,
+                direction: 'rtl',
+                loading: false,
 
+                /**
+                 * classification
+                 */
+                markTo: '',
+                classifiSelectId:'',
             }
         },
         created() {
@@ -396,7 +468,6 @@
         },
         computed: {},
         methods: {
-
             /**
              * render methods
              */
@@ -443,6 +514,37 @@
                 else return 'warning';
             },
 
+            /**
+             *  classification
+             */
+            filterSpecial(command) {
+                console.log(command);
+                this.$axios({
+                    method: 'get',
+                    url: '/api/special-list/tours/' + command
+                }).then(res => {
+                    console.log(res.data);
+                    this.specialTours = res.data;
+                })
+            },
+            deleteRecord(id, index) {
+                this.loading = true;
+                console.log(index);
+                this.specialTours.splice(index, 1);
+                this.$axios({
+                    method: 'delete',
+                    url: '/api/special-list/' + id
+                }).then(res => {
+                    this.loading = false;
+                    console.log(res)
+                    if (res.code === 0) {
+                        this.$message.success(res.msg);
+                    }
+                })
+            },
+            mark(command){
+              this.markTo = command;
+            },
             /**
              * get tour details
              */
@@ -513,8 +615,8 @@
                     type: 'warning'
                 }).then(() => {
                     this.$axios({
-                        method:'delete',
-                        url:'/api/tour/' + id
+                        method: 'delete',
+                        url: '/api/tour/' + id
                     }).then(res => {
                         this.$message.success(res.msg);
                         this.getData();
@@ -571,7 +673,22 @@
             clear() {
                 this.$refs.upload.clearFiles()
             },
-
+            async markAs(type, id) {
+                await this.$axios({
+                    method: 'post',
+                    url: '/api/special-list',
+                    data: {
+                        itemId: id,
+                        status: type,
+                    }
+                }).then(res => {
+                    this.$message.info(res.msg);
+                })
+            },
+            doClassification(id){
+              this.classificationVisible = true;
+              this.classifiSelectId = id;
+            },
             /**
              * filter methods
              */
@@ -644,7 +761,7 @@
             },
 
 
-        }
+        },
     }
 
 </script>
@@ -683,5 +800,13 @@
 
     .mr10 {
         margin-right: 10px;
+    }
+
+    .special-area {
+        text-align: center;
+    }
+
+    .info{
+        margin-bottom: 30px;
     }
 </style>
